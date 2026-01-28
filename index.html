@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Happy 25th Birthday 🎉</title>
+
+<style>
+  body {
+    margin: 0;
+    padding: 50px;
+    font-family: Arial, sans-serif;
+    text-align: center;
+    background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+    overflow: hidden;
+  }
+
+  canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+  }
+
+  .card {
+    background: white;
+    max-width: 500px;
+    margin: auto;
+    padding: 30px;
+    border-radius: 20px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    position: relative;
+    z-index: 1;
+  }
+
+  h1 {
+    color: #ff4d6d;
+  }
+
+  #countdown {
+    display: flex;
+    justify-content: space-around;
+    margin: 25px 0;
+  }
+
+  #countdown div {
+    background: #ff4d6d;
+    color: white;
+    padding: 10px;
+    border-radius: 10px;
+    min-width: 70px;
+  }
+
+  #countdown span {
+    font-size: 1.8em;
+    display: block;
+  }
+
+  .from {
+    margin-top: 20px;
+    font-style: italic;
+  }
+</style>
+</head>
+
+<body>
+
+<canvas id="confetti"></canvas>
+
+<div class="card" id="card">
+  <h1>🎉 Birthday Countdown 🎉</h1>
+  <p>Counting down to your 25th!</p>
+
+  <div id="countdown">
+    <div><span id="days">0</span>Days</div>
+    <div><span id="hours">0</span>Hours</div>
+    <div><span id="minutes">0</span>Minutes</div>
+    <div><span id="seconds">0</span>Seconds</div>
+  </div>
+
+  <p class="from">— From your friend 💙</p>
+</div>
+
+<script>
+  // 🎂 COUNTDOWN (Feb 5, 2026)
+  const birthday = new Date("February 5, 2026 00:00:00").getTime();
+
+  setInterval(() => {
+    const now = new Date().getTime();
+    const distance = birthday - now;
+
+    if (distance < 0) {
+      document.getElementById("card").innerHTML = `
+        <h1>🎉 HAPPY 25TH BIRTHDAY AVERY! 🎉</h1>
+        <p>Hope your day is full of lesbians and goldfish</p>
+      `;
+      return;
+    }
+
+    document.getElementById("days").innerText =
+      Math.floor(distance / (1000 * 60 * 60 * 24));
+    document.getElementById("hours").innerText =
+      Math.floor((distance / (1000 * 60 * 60)) % 24);
+    document.getElementById("minutes").innerText =
+      Math.floor((distance / (1000 * 60)) % 60);
+    document.getElementById("seconds").innerText =
+      Math.floor((distance / 1000) % 60);
+  }, 1000);
+
+  // 🎊 CONFETTI
+  const canvas = document.getElementById("confetti");
+  const ctx = canvas.getContext("2d");
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+
+  const colors = ["#ff4d6d", "#ffd166", "#06d6a0", "#118ab2"];
+  const pieces = [];
+
+  for (let i = 0; i < 150; i++) {
+    pieces.push({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height,
+      r: Math.random() * 6 + 4,
+      d: Math.random() * 150,
+      color: colors[Math.floor(Math.random() * colors.length)]
+    });
+  }
+
+  let angle = 0;
+  function drawConfetti() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    angle += 0.01;
+
+    pieces.forEach(p => {
+      p.y += Math.cos(angle + p.d) + 1 + p.r / 2;
+      p.x += Math.sin(angle);
+
+      if (p.y > canvas.height) {
+        p.y = -10;
+        p.x = Math.random() * canvas.width;
+      }
+
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fillStyle = p.color;
+      ctx.fill();
+    });
+
+    requestAnimationFrame(drawConfetti);
+  }
+
+  drawConfetti();
+
+  window.addEventListener("resize", () => {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  });
+</script>
+
+</body>
+</html>
